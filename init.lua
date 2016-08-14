@@ -47,6 +47,7 @@ function stats.set_stat(player, name, value)
 	playerstats[pname][name] = value
 end
 
+--TODO add decrease stat function
 function stats.increase_stat(player, name, value)
 	local pname = player
 	if type(pname) ~= "string" then
@@ -78,6 +79,19 @@ end
 --
 -- End API
 --
+
+stats.register_stat({
+	name = "first_login",
+	description = function(value)
+		local result = "unknown"
+		if value > 0 then
+			local date = os.date("!%F %T %Z", value)
+			local days = math.floor( (os.time() - value) / 864 ) / 100
+			result = date.."("..days.." days ago)"
+		end
+		return " - First login: "..result
+	end,
+})
 
 stats.register_stat({
 	name = "digged_nodes",
@@ -150,27 +164,30 @@ local function save_stats()
 end
 
 local timer = 0
-local timer2 = 0
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
-	timer2 = timer2 + dtime
 	
 	-- NOTE: Set this to a higher value to remove some load from the server
-	if timer > 0 then
+	if timer > 1 then
 		for _,player in ipairs(minetest.get_connected_players()) do
 			stats.increase_stat(player, "played_time", timer)
 		end
 		timer = 0
 	end
-	
-	if timer2 > 30 then
-		timer2 = 0
-		save_stats()
-	end
 end)
+
+local function save()
+	save_stats()
+	minetest.after(60, save)
+end
+minetest.after(60, save)
 
 minetest.register_on_shutdown(function() 
 	save_stats()
+end)
+
+minetest.register_on_newplayer(function(player)
+	stats.set_stat(player, "first_login", os.time())
 end)
 
 minetest.register_on_dignode(function(pos, oldnode, player)
@@ -198,15 +215,19 @@ minetest.register_chatcommand("stats", {
 	description = "Prints the stats of the player",
 	privs = {},
 	func = function(name, param)
-		local playername = name
-		local player = minetest.get_player_by_name(param)
-		if player then
-			playername = player:get_player_name()
+		local player_name = name
+		if param ~= "" then
+			player_name = string.match(param, '^([^ ]+)$')
+			if not player_name then
+				return false, 'Invalid parameters (see /help stats)'
+			elseif not core.auth_table[player_name] then
+				return false, 'Player ' .. player_name .. ' does not exist.'
+			end
 		end
-		
-		minetest.chat_send_player(name, "Stats for "..playername..":")
+
+		minetest.chat_send_player(name, "Stats for "..player_name..":")
 		for _,def in ipairs(stats.registered_stats) do
-			local value = stats.get_stat(playername, def.name)
+			local value = stats.get_stat(player_name, def.name)
 			minetest.chat_send_player(name, def.description(value))
 		end
 	end,
