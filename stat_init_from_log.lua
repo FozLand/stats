@@ -200,9 +200,9 @@ local load_player_stats = function(world_path)
 end
 
 local save_player_stats = function(world_path, player_stats)
-	for k,v in pairs(player_stats) do
-		print(v.first_login,v.digged_nodes,v.placed_nodes,v.crafted,v.played_time,k)
-	end
+	--for k,v in pairs(player_stats) do
+		--print(v.first_login,v.digged_nodes,v.placed_nodes,v.crafted,v.played_time,k)
+	--end
 	local f = assert(io.open(world_path..'/stats.mt', 'w'))
 	f:write('return ')
 	serialize(player_stats, f)
