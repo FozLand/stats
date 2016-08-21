@@ -2,7 +2,7 @@
 
 -- This script is intended to help initialize the stats on an existing server
 -- using the debug.txt log files before enabling the stats mod. The stat totals
--- are added to cummulatively so start will no stats.txt file and only run this
+-- are added to cummulatively so start will no stats.mt file and only run this
 -- script once per debug file. Also, make sure the server is not running, or at
 -- the very least that the stats mod is not running yet.
 
@@ -184,7 +184,7 @@ local calc_claim_counts = function(world_path, players, stats)
 end
 
 local load_player_stats = function(world_path)
-	local full_name = world_path .. '/stats.txt'
+	local full_name = world_path .. '/stats.mt'
 	local f=io.open(full_name,"r")
 	local player_stats = {}
 	if f~=nil then
@@ -203,7 +203,7 @@ local save_player_stats = function(world_path, player_stats)
 	for k,v in pairs(player_stats) do
 		print(v.first_login,v.digged_nodes,v.placed_nodes,v.crafted,v.played_time,k)
 	end
-	local f = assert(io.open(world_path..'/stats.txt', 'w'))
+	local f = assert(io.open(world_path..'/stats.mt', 'w'))
 	f:write('return ')
 	serialize(player_stats, f)
 	f:close()

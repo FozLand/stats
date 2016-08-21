@@ -146,7 +146,7 @@ stats.register_stat({
 	end,
 })
 
-local file = io.open(minetest:get_worldpath().."/stats.txt", "r")
+local file = io.open(minetest:get_worldpath().."/stats.mt", "r")
 if file then
 		local table = minetest.deserialize(file:read("*all"))
 		if type(table) == "table" then
@@ -158,7 +158,7 @@ if file then
 end
 
 local function save_stats()
-	local file = io.open(minetest:get_worldpath().."/stats.txt", "w")
+	local file = io.open(minetest:get_worldpath().."/stats.mt", "w")
 	if file then
 		file:write(minetest.serialize(playerstats))
 		file:close()
