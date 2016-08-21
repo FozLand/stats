@@ -61,6 +61,10 @@ function stats.increase_stat(player, name, value)
 	playerstats[pname][name] = playerstats[pname][name] + value
 end
 
+function stats.decrease_stat(player, name, value)
+	stats.increase_stat(player, name, -value)
+end
+
 function stats.get_stat(player, name)
 	local pname = player
 	if type(pname) ~= "string" then
