@@ -217,7 +217,7 @@ end)
 minetest.register_chatcommand("stats", {
 	params = "<name>",
 	description = "Prints the stats of the player",
-	privs = {},
+	privs = {kick=true},
 	func = function(name, param)
 		local player_name = name
 		if param ~= "" then
