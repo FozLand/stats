@@ -47,7 +47,6 @@ function stats.set_stat(player, name, value)
 	playerstats[pname][name] = value
 end
 
---TODO add decrease stat function
 function stats.increase_stat(player, name, value)
 	local pname = player
 	if type(pname) ~= "string" then
@@ -158,9 +157,18 @@ if file then
 end
 
 local function save_stats()
-	local file = io.open(minetest:get_worldpath().."/stats.mt", "w")
+	local path = minetest:get_worldpath()
+	os.execute("cp "..path.."/stats.mt "..path.."/stats.bak")
+
+	-- Sometimes the server runs out of RAM causing a crash. It seems to be
+	-- crashing while writting the stats file resulting in an empty file. By
+	-- serializing the stats data before opening the file, I hope any impending
+	-- crash will be occur during serialization before the file is opened. Thus
+	-- preserving the previous stats data.
+	local data = minetest.serialize(playerstats)
+	local file = io.open(path.."/stats.mt", "w")
 	if file then
-		file:write(minetest.serialize(playerstats))
+		file:write(data)
 		file:close()
 	else
 		minetest.log("error", "Can't save stats")
