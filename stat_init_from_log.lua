@@ -1,8 +1,26 @@
 #!/usr/bin/lua
 
+--[[
+Copyright (C) 2016 John Cole
+This file is part of Stats.
+
+Stats is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stats is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stats.  If not, see <http://www.gnu.org/licenses/>.
+]]
+
 -- This script is intended to help initialize the stats on an existing server
 -- using the debug.txt log files before enabling the stats mod. The stat totals
--- are added to cummulatively so start will no stats.mt file and only run this
+-- are added to cummulatively so start without a stats.mt file and only run this
 -- script once per debug file. Also, make sure the server is not running, or at
 -- the very least that the stats mod is not running yet.
 
