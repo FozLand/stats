@@ -282,6 +282,7 @@ function stats.player_search(query)
 					table.insert(row,value)
 				end
 				table.insert(results,row)
+				if #results > 99 then break end
 			end
 		end
 	end
